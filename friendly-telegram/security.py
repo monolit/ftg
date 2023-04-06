@@ -199,9 +199,9 @@ class SecurityManager:
 
         if f_owner and message.sender_id in self._owner:
             return True
-        if f_sudo and message.sender_id in self._sudo:
+        if f_sudo and (message.chat_id in self._sudo or message.sender_id in self._sudo):
             return True
-        if f_support and message.sender_id in self._support:
+        if f_support and (message.chat_id in self._support or message.sender_id in self._support):
             return True
 
         if message.sender_id in self._db.get(main.__name__, "blacklist_users", []):
