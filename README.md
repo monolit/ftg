@@ -11,8 +11,8 @@ sudo apt install git ffmpeg imagemagick python3 libjpeg-turbo zlib libwebp libff
 git clone https://github.com/monolit/ftg --filter=blob:none ftg
 cd ftg
 git checkout && git fetch
-pip install -r requirements.txt
-python -m friendly-telegram
+pip3 install -r requirements.txt
+python3 -m friendly-telegram
 ```
 
 ## Changes
