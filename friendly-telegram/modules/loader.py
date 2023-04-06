@@ -34,6 +34,7 @@ from os import path
 import telethon
 
 import requests
+import textwrap
 
 from .. import loader, utils
 
@@ -122,7 +123,7 @@ class LoaderMod(loader.Module):
                "provide_module": "<b>Provide a module to load</b>",
                "bad_unicode": "<b>Invalid Unicode formatting in module</b>",
                "load_failed": "<b>Loading failed. See logs for details</b>",
-               "loaded": "<b>Module </b><code>{}</code><b> loaded.</b>{}",
+               "loaded": "<b>Module </b><code>{}</code><b> loaded.</b>\n{}",
                "no_class": "<b>What class needs to be unloaded?</b>",
                "unloaded": "<b>Module unloaded.</b>",
                "not_unloaded": "<b>Module not unloaded.</b>",
@@ -151,8 +152,9 @@ class LoaderMod(loader.Module):
                "repo_not_loaded": "<b>Repository not loaded</b>",
                "repo_unloaded": "<b>Repository unloaded, but restart is required to unload repository modules</b>",
                "repo_not_unloaded": "<b>Repository not unloaded</b>",
-               "single_cmd": "\n{}\n",
-               "undoc_cmd": "No docs"
+               "single_cmd": "\n• <code>{}</code>\n",
+               "undoc_cmd": "  No docs",
+               "getdoc": "<i>  {}</i>\n"
             }
 
     def __init__(self):
@@ -317,12 +319,12 @@ class LoaderMod(loader.Module):
                 modname = getattr(instance, "name", "ERROR")
             modhelp = ""
             if instance.__doc__:
-                modhelp += "<i>\nℹ️ " +  ("\n".join("  " + t for t in utils.escape_html(inspect.getdoc(instance)).split("\n"))).strip() + "</i>\n"
+                modhelp += self.strings["getdoc"].format(wrap(instance))
             commands = {name: func for name, func in instance.commands.items()}
             for name, fun in commands.items():
                 modhelp += self.strings("single_cmd", message).format(name)
                 if fun.__doc__:
-                    modhelp += utils.escape_html("\n".join("    " + t for t in inspect.getdoc(fun).split("\n")))
+                    modhelp += self.strings["getdoc"].format(wrap(fun))
                 else:
                     modhelp += self.strings("undoc_cmd", message)
             try:
@@ -534,3 +536,14 @@ def get_module(module):
             r[1] = "link"
             r[2] = origin
     return r
+
+def wrap(i):
+    i = utils.escape_html(inspect.getdoc(i)).strip()
+    wrapped_lines = textwrap.fill(
+            i,
+            width=40, # maybe! telegram width
+            replace_whitespace=False,
+            drop_whitespace=False,
+            break_long_words=False,
+        )
+    return re.sub(r"\n", "\n  ", wrapped_lines)
