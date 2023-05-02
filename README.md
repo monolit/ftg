@@ -3,6 +3,7 @@
 # Friendly Telegram Userbot
 A fast, easy to set up telegram userbot running Python 3
 
+# Strongly recommend python 3.10+
 # Usage
 ```bash
 # idk all that needed or not
