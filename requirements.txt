@@ -3,7 +3,7 @@ speedtest-cli
 Pillow
 cryptg
 # Telegram connection
-git+https://github.com/LonamiWebs/Telethon@4b151fb
+git+https://github.com/LonamiWebs/Telethon@9c7ac3b
 
 # Config
 pythondialog
